@@ -5,8 +5,11 @@
 void insertion_sort(int arr[], int n);
 void selection_sort(int arr[], int n);
 void bubble_sort(int arr[],int n);
+void heapify(int arr[], int i);
+void build_heap(int arr[], int n);
+void heap_sort(int arr[],int n);
 float execution_time(void (*f)(int[], int),int,int[]);
-
+int heap_size;
 int main(void) {
   int decision = 0;
   while(decision == 0) {
@@ -22,6 +25,7 @@ int main(void) {
     case 1:
       {
         int array_size;
+        heap_size = array_size;
         printf("%s", "Please enter an integer for array size: ");
         scanf("%d", &array_size);
         int arr[array_size];
@@ -42,13 +46,17 @@ int main(void) {
         exectime = execution_time(bubble_sort,array_size, arr);
         exectime = exectime / CLOCKS_PER_SEC;
         printf("%s%f%s", "Bubble Sort",exectime, "\n");
+        exectime = execution_time(heap_sort,array_size, arr);
+        exectime = exectime / CLOCKS_PER_SEC;
+        printf("%s%f%s", "Heap Sort",exectime, "\n");
         break;
       }
     case 2:
       {
         int array_size = 10;
+        heap_size = array_size;
         double exectime;
-        for(int i=1; i<7; i++) {
+        for(int i=1; i<9; i++) {
           int* arr;
           //array_size = int_exponential(10, i);
           arr = (int *)malloc(array_size * sizeof(int));
@@ -71,6 +79,9 @@ int main(void) {
           exectime = execution_time(bubble_sort,array_size, arr);
           exectime = exectime / CLOCKS_PER_SEC;
           printf("%s%f%s", "Bubble Sort",exectime, "\n");
+          exectime = execution_time(heap_sort,array_size, arr);
+          exectime = exectime / CLOCKS_PER_SEC;
+          printf("%s%f%s", "Heap Sort",exectime, "\n");
           free(arr);
           array_size = array_size * 10;
         }
@@ -128,7 +139,56 @@ void bubble_sort(int arr[],int n) {
   }
 }
 
+void heapify(int arr[], int i) {
+  int left(int i);
+  int right(int i);
+  int left_child, right_child, max, temp;
+  left_child = left(i);
+  right_child = right(i);
+  if((left_child <= heap_size) && (arr[left_child] > arr[i])) {
+    max = left_child;
+  }
+  else {
+    max = i;
+  }
+  if((right_child <= heap_size) && (arr[right_child] > arr[max])) {
+    max = right_child;
+  }
+  if (max != i) {
+    temp = arr[max];
+    arr[max] = arr[i];
+    arr[i] = temp;
+    heapify(arr, max);
+  }
+}
 
+int left(int i) {
+  return (2*i+1);
+}
+
+int right(int i) {
+  return (2*i+2);
+}
+
+void build_heap(int arr[], int n) {
+  int i;
+  heap_size = n-1;
+  for(i = (n-1)/2; i >= 0; i--) {
+    heapify(arr,i);
+  }
+}
+
+void heap_sort(int arr[], int n) {
+  int i, temp;
+  build_heap(arr, n);
+  for(i = n-1; i >= 1; i--) {
+    temp = arr[i];
+    arr[i] = arr[0];
+    arr[0] = temp;
+    heap_size--;
+    heapify(arr, 0);
+  }
+}
 /*
 int int_exponential(int x, int y) {
   int start = 1;
