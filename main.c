@@ -75,7 +75,6 @@ int main(void) {
         double exectime;
         for(int i=1; i<7; i++) {
           int* arr;
-          //array_size = int_exponential(10, i);
           arr = (int *)malloc(array_size * sizeof(int));
           for(int j=0;j<array_size;j++) {
             arr[j] = rand();
@@ -110,6 +109,7 @@ int main(void) {
           exectime = execution_time_3variable(merge_sort, 0, arr,array_size-1);
           exectime = exectime / CLOCKS_PER_SEC;
           printf("%s%f%s", "Merge sort: ",exectime, "\n");
+    
           free(arr);
           array_size = array_size * 10;
         }
@@ -273,7 +273,7 @@ void merge_sort(int arr[], int left, int right) {
 void merge(int arr[], int left, int k, int right) {
   int i, j, l = 0;
   int* temp_arr;
-  temp_arr = (int *)malloc(max_size * sizeof(int));
+  temp_arr = (int *)calloc(max_size, sizeof(int));
 
   for (i=left, j = k+1; (i <=k) && (j <= right);) {
     if (arr[i] < arr[j]) {
@@ -300,4 +300,5 @@ void merge(int arr[], int left, int k, int right) {
   for (i = left, l = 0; i<= right; i++, l++) {
     arr[i]= temp_arr[l];
   }
+  free(temp_arr);
 }
